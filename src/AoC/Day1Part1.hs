@@ -3,6 +3,8 @@ module AoC.Day1Part1 (run, solve) where
 import Data.List.Split (splitOn)
 
 -- Define here the functions you need to solve the puzzle
+solve :: [String] -> Int
+solve _ = undefined
 
 -- Small helper functions that you can use if you want
 groupLinesByElf :: [String] -> [[String]]
