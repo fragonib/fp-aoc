@@ -13,7 +13,7 @@ groupLinesByElf lines = splitOn [""] lines
 -- This is the main function that read input lines and print the result
 -- You can change it if you want, but it's just boilerplate (not required)
 inputFile :: String
-inputFile = "Day1.input"
+inputFile = "src/AoC/Day1.input"
 
 run :: IO ()
 run = do
