@@ -1,4 +1,4 @@
-module AoC.Day1Part1Spec (spec) where
+module AoC.Day1Spec (spec) where
 
 import AoC.Day1Part1 (solve)
 import Test.Hspec
