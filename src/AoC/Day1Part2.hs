@@ -4,23 +4,21 @@ import Data.List (sort)
 import Data.List.Split (splitOn)
 
 solve :: [String] -> Int
-solve lines = sum (take 3 sortedElf)
+solve lines = sum (take 3 sortedElfDesc)
   where
-    sortedElf = reverse (sort summedElfCalories)
-    summedElfCalories = map' sum (elvesCalories lines)
+    sortedElfDesc = reverse (sort summedElfCalories)
+    summedElfCalories = map sum (elvesCalories lines)
 
 groupLinesByElf :: [String] -> [[String]]
 groupLinesByElf = splitOn [""]
 
 elvesCalories :: [String] -> [[Int]]
-elvesCalories lines = map' toCalories (groupLinesByElf lines)
+elvesCalories lines = map toCalories groupedLines
+  where
+    groupedLines = groupLinesByElf lines
 
 toCalories :: [String] -> [Int]
-toCalories = map' read
-
-map' :: (a -> b) -> [a] -> [b]
-map' _ [] = []
-map' f (x : xs) = f x : map' f xs
+toCalories = map read
 
 -- This is the main function that read input lines and print the result
 -- You can change it if you want, but it is not required
