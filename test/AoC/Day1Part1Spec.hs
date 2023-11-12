@@ -23,4 +23,4 @@ spec = do
           "",
           "10000"
         ]
-        `shouldBe` 4
+        `shouldBe` 24000
