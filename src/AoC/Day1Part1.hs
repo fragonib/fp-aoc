@@ -10,7 +10,7 @@ groupLinesByElf lines = splitOn [""] lines
 solve :: [String] -> Int
 solve lines = maxCalories summedElfCalories
   where
-    summedElfCalories = map sum (elvesCalories lines)
+    summedElfCalories = map' sum (elvesCalories lines)
 
 -- Calculates maximum calories
 maxCalories :: [Int] -> Int
@@ -22,11 +22,15 @@ maxCalories (first : second : rest) =
 
 -- Split the input lines into groups of lines by empty line
 elvesCalories :: [String] -> [[Int]]
-elvesCalories lines = map toCalories (groupLinesByElf lines)
+elvesCalories lines = map' toCalories (groupLinesByElf lines)
 
 -- Convert a list of lines into a list of integers
 toCalories :: [String] -> [Int]
-toCalories lines = map read lines
+toCalories lines = map' read lines
+
+map' :: (a -> b) -> [a] -> [b]
+map' _ [] = []
+map' f (x : xs) = f x : map' f xs
 
 -- This is the main function that read input lines and print the result
 -- You can change it if you want, but it is not required
