@@ -1,6 +1,6 @@
 module AoC.Day2Part1 (run, solve) where
 
--- Some types that can be useful, you can use it it you want
+-- Some types that can be useful, you can use it if you want
 data Move = Rock | Paper | Scissors deriving (Show, Eq)
 
 data Winner = Opponent | You | Draw deriving (Show, Eq)
