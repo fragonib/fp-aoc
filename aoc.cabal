@@ -28,6 +28,7 @@ library
       AoC.Day1Part1
       AoC.Day1Part2
       AoC.Day2Part1
+      AoC.Day2Part2
   other-modules:
       Paths_aoc
   autogen-modules:
