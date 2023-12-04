@@ -1,6 +1,6 @@
 module Main (main) where
 
-import AoC.Day2Part2 (run)
+import AoC2023.Day1Part1 (run)
 
 main :: IO ()
 main = run
