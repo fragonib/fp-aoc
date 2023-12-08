@@ -8,25 +8,23 @@ solve :: [String] -> Int
 solve lines = sum (map evaluar lines)
 
 evaluar :: String -> Int
-evaluar word = calculation $ translateToNumbers "" word
+evaluar word = calculation $ translateToNumbers initialParsed word
+  where
+    initialParsed = []
 
 calculation :: String -> Int
 calculation numbersLiteral = read [head numbersLiteral, last numbersLiteral]
 
 translateToNumbers :: String -> String -> [Char]
-translateToNumbers toBeParsed [] =
-  case spellToNumber toBeParsed of
-    Nothing -> []
-    Just numberChar -> [numberChar]
-translateToNumbers toBeParsed rest@(head : tail)
-  | isNumber head =
-      case spellToNumber toBeParsed of
-        Nothing -> head : translateToNumbers toBeParsed tail
-        Just numberChar -> numberChar : head : translateToNumbers [last toBeParsed] tail
+translateToNumbers parsed [] = []
+translateToNumbers parsed rest@(head : tail)
+  | isNumber head = head : translateToNumbers parsed tail
   | otherwise =
-      case spellToNumber toBeParsed of
-        Nothing -> translateToNumbers (toBeParsed ++ [head]) tail
-        Just numberChar -> numberChar : translateToNumbers [last toBeParsed] rest
+      let newAddition = [head]
+          toBeParsed = (parsed ++ newAddition)
+       in case spellToNumber toBeParsed of
+            Nothing -> translateToNumbers toBeParsed tail
+            Just numberChar -> numberChar : translateToNumbers newAddition rest
 
 spellToNumber :: String -> Maybe Char
 spellToNumber spell

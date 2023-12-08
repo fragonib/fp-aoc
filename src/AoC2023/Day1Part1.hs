@@ -4,14 +4,14 @@ import Data.Char (isNumber)
 import Data.List.Split (splitOn)
 
 solve :: [String] -> Int
-solve lines = sum (map calibration lines)
+solve lines = sum (map calculation lines)
 
-calibration :: String -> Int
-calibration word = read (primero : [ultimo])
+calculation :: String -> Int
+calculation word = read [primero, ultimo]
   where
-    primero = head numeros
-    ultimo = last numeros
-    numeros = filter isNumber word
+    primero = head numbers
+    ultimo = last numbers
+    numbers = filter isNumber word
 
 run :: IO ()
 run = do
