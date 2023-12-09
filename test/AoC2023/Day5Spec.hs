@@ -1,46 +1,48 @@
 module AoC2023.Day5Spec (spec) where
 
 import qualified AoC2023.Day5Part1 as Part1
-import qualified Data.List.Split as Part1
+import qualified AoC2023.Day5Part2 as Part2
 import Test.Hspec
 
 spec :: Spec
 spec = do
-  describe "Day8" $ do
+  describe "Day5" $ do
+    let input =
+          [ "seeds: 79 14 55 13",
+            "",
+            "seed-to-soil map:",
+            "50 98 2",
+            "52 50 48",
+            "",
+            "soil-to-fertilizer map:",
+            "0 15 37",
+            "37 52 2",
+            "39 0 15",
+            "",
+            "fertilizer-to-water map:",
+            "49 53 8",
+            "0 11 42",
+            "42 0 7",
+            "57 7 4",
+            "",
+            "water-to-light map:",
+            "88 18 7",
+            "18 25 70",
+            "",
+            "light-to-temperature map:",
+            "45 77 23",
+            "81 45 19",
+            "68 64 13",
+            "",
+            "temperature-to-humidity map:",
+            "0 69 1",
+            "1 0 69",
+            "",
+            "humidity-to-location map:",
+            "60 56 37",
+            "56 93 4"
+          ]
     it "Part1" $ do
-      Part1.solve
-        [ "seeds: 79 14 55 13",
-          "",
-          "seed-to-soil map:",
-          "50 98 2",
-          "52 50 48",
-          "",
-          "soil-to-fertilizer map:",
-          "0 15 37",
-          "37 52 2",
-          "39 0 15",
-          "",
-          "fertilizer-to-water map:",
-          "49 53 8",
-          "0 11 42",
-          "42 0 7",
-          "57 7 4",
-          "",
-          "water-to-light map:",
-          "88 18 7",
-          "18 25 70",
-          "",
-          "light-to-temperature map:",
-          "45 77 23",
-          "81 45 19",
-          "68 64 13",
-          "",
-          "temperature-to-humidity map:",
-          "0 69 1",
-          "1 0 69",
-          "",
-          "humidity-to-location map:",
-          "60 56 37",
-          "56 93 4"
-        ]
-        `shouldBe` 35
+      Part1.solve input `shouldBe` 35
+    it "Part2" $ do
+      Part2.solve input `shouldBe` 46

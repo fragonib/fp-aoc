@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
-module AoC2023.Day5Part1 (run, solve) where
+module AoC2023.Day5Part2 (run, solve, parseSeeds) where
 
 import Data.Char (isNumber)
 import Data.List.Split (splitOn)
@@ -29,7 +29,19 @@ location :: Almanac -> Int -> Int
 location almanac seed = foldl (flip infer) seed almanac
 
 parseSeeds :: String -> [Int]
-parseSeeds = map read . drop 1 . words
+parseSeeds line = pairs >>= expandSeeds
+  where
+    pairs = window ints
+    ints = (map read . drop 1 . words) line
+
+expandSeeds :: (Enum a, Num a) => (a, a) -> [a]
+expandSeeds (num, amount) = map (num +) [0 .. amount - 1]
+
+window :: [a] -> [(a, a)]
+window [] = []
+window [a] = []
+window [a, b] = [(a, b)]
+window (a : b : r) = (a, b) : window r
 
 parseAlmanac :: [[String]] -> Almanac
 parseAlmanac = map parseMappings
