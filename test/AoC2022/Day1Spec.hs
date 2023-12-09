@@ -1,7 +1,7 @@
-module AoC.Day1Spec (spec) where
+module AoC2022.Day1Spec (spec) where
 
-import qualified AoC.Day1Part1 as Part1
-import qualified AoC.Day1Part2 as Part2
+import qualified AoC2022.Day1Part1 as Part1
+import qualified AoC2022.Day1Part2 as Part2
 import Test.Hspec
 
 spec :: Spec

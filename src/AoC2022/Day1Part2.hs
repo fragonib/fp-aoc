@@ -1,4 +1,4 @@
-module AoC.Day1Part2 (run, solve) where
+module AoC2022.Day1Part2 (run, solve) where
 
 import Data.List (sort)
 import Data.List.Split (splitOn)

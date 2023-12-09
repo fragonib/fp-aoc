@@ -1,4 +1,4 @@
-module AoC.Day2Part2 (run, solve) where
+module AoC2022.Day2Part1 (run, solve) where
 
 -- Some types that can be useful, you can use it if you want
 data Move = Rock | Paper | Scissors deriving (Show, Eq)
@@ -7,8 +7,6 @@ data Winner = Opponent | You | Draw deriving (Show, Eq)
 
 type Play = (Move, Move)
 
-type DesiredPlay = (Move, Winner)
-
 -- Define here the functions you need to solve the puzzle
 solve :: [String] -> Int
 solve lines = sum $ map (outcomePoints . parsePlay) lines
@@ -16,30 +14,15 @@ solve lines = sum $ map (outcomePoints . parsePlay) lines
 parsePlay :: String -> Play
 parsePlay line =
   case words line of
-    [opponent, desiredWinner] -> (fst desiredPaly, inferYourMove desiredPaly)
-      where
-        desiredPaly = (parseMove opponent, parseDesiredWinner desiredWinner)
+    [opponent, you] -> (parseMove opponent, parseMove you)
 
 parseMove :: String -> Move
 parseMove "A" = Rock
 parseMove "B" = Paper
 parseMove "C" = Scissors
-
-parseDesiredWinner :: String -> Winner
-parseDesiredWinner "X" = Opponent
-parseDesiredWinner "Y" = Draw
-parseDesiredWinner "Z" = You
-
-inferYourMove :: DesiredPlay -> Move
-inferYourMove (Rock, Opponent) = Scissors
-inferYourMove (Rock, Draw) = Rock
-inferYourMove (Rock, You) = Paper
-inferYourMove (Paper, Opponent) = Rock
-inferYourMove (Paper, Draw) = Paper
-inferYourMove (Paper, You) = Scissors
-inferYourMove (Scissors, Opponent) = Paper
-inferYourMove (Scissors, Draw) = Scissors
-inferYourMove (Scissors, You) = Rock
+parseMove "X" = Rock
+parseMove "Y" = Paper
+parseMove "Z" = Scissors
 
 outcomePoints :: Play -> Int
 outcomePoints match@(opponent, you) =
