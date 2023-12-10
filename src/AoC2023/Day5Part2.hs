@@ -3,6 +3,8 @@
 module AoC2023.Day5Part2 (run, solve, parseSeeds) where
 
 import Data.Char (isNumber)
+import Data.Function (on)
+import Data.List (sortBy)
 import Data.List.Split (splitOn)
 
 data Mapping = Mapping
@@ -12,30 +14,57 @@ data Mapping = Mapping
   }
   deriving (Show, Eq)
 
-type Mappings = [Mapping]
-
-type Almanac = [Mappings]
-
--- Parsing
+type Almanac = [[Mapping]]
 
 solve :: [String] -> Int
-solve lines = minimum $ map (location almanac) seeds
+solve lines = minimum locations
   where
+    locations = map (location almanac) seeds
     seeds = parseSeeds $ head $ head sections
-    almanac = parseAlmanac $ drop 1 sections
-    sections = splitLines lines
+    almanac = map (sortBy byStartRange) (parseAlmanac $ drop 1 sections)
+    sections = splitInSections lines
 
 location :: Almanac -> Int -> Int
 location almanac seed = foldl (flip infer) seed almanac
 
-parseSeeds :: String -> [Int]
-parseSeeds line = pairs >>= expandSeeds
-  where
-    pairs = window ints
-    ints = (map read . drop 1 . words) line
+infer :: [Mapping] -> Int -> Int
+infer mappings targetNum =
+  let foundMapping = binaryMappingSearch isInMapping targetNum mappings
+   in case foundMapping of
+        Nothing -> targetNum
+        Just (Mapping destination source _) -> destination + (targetNum - source)
 
-expandSeeds :: (Enum a, Num a) => (a, a) -> [a]
-expandSeeds (num, amount) = map (num +) [0 .. amount - 1]
+isInMapping :: Mapping -> Int -> Bool
+isInMapping (Mapping destination source range) targetNum =
+  targetNum >= source && targetNum < (source + range)
+
+byStartRange :: Mapping -> Mapping -> Ordering
+byStartRange = compare `on` souceRangeStart
+
+binaryMappingSearch :: (Mapping -> Int -> Bool) -> Int -> [Mapping] -> Maybe Mapping
+binaryMappingSearch _ _ [] = Nothing
+binaryMappingSearch matcher elem mappings
+  | matcher mapping elem = Just mapping
+  | elem < source = binaryMappingSearch matcher elem smaller
+  | otherwise = binaryMappingSearch matcher elem bigger
+  where
+    Mapping _ source _ = mapping
+    (smaller, mapping : bigger) = splitAt index mappings
+    index = length mappings `quot` 2
+
+-- Parsing
+
+splitInSections :: [String] -> [[String]]
+splitInSections = splitOn [""]
+
+parseSeeds :: String -> [Int]
+parseSeeds line = seedsRange >>= expandSeedRange
+  where
+    seedsRange = window seeds
+    seeds = (map read . drop 1 . words) line
+
+expandSeedRange :: (Enum a, Num a) => (a, a) -> [a]
+expandSeedRange (num, amount) = map (num +) [0 .. amount - 1]
 
 window :: [a] -> [(a, a)]
 window [] = []
@@ -46,25 +75,17 @@ window (a : b : r) = (a, b) : window r
 parseAlmanac :: [[String]] -> Almanac
 parseAlmanac = map parseMappings
 
-parseMappings :: [String] -> Mappings
-parseMappings lines = map (\(x, y, z) -> Mapping x y z) numbers
+parseMappings :: [String] -> [Mapping]
+parseMappings lines = map mappingBuilder numbers
   where
-    numbers = map (tuplify3 . map read . words) mappings
+    numbers = map (map read . words) mappings
     mappings = drop 1 lines
 
-splitLines :: [String] -> [[String]]
-splitLines = splitOn [""]
+mappingBuilder :: [Int] -> Mapping
+mappingBuilder [destination, source, length] =
+  Mapping destination source length
 
-tuplify3 :: [a] -> (a, a, a)
-tuplify3 [x, y, z] = (x, y, z)
-
-infer :: Mappings -> Int -> Int
-infer [] num = num
-infer (rule : rest) num =
-  case rule of
-    Mapping destination source range
-      | num >= source && num <= source + range -> destination + (num - source)
-      | otherwise -> infer rest num
+-- Main
 
 run :: IO ()
 run = do
