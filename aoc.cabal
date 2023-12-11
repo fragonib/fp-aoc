@@ -29,6 +29,7 @@ library
       AoC2022.Day1Part2
       AoC2022.Day2Part1
       AoC2022.Day2Part2
+      AoC2023.Day11Part1
       AoC2023.Day1Part1
       AoC2023.Day1Part2
       AoC2023.Day5Part1
@@ -66,6 +67,7 @@ test-suite aoc-test
   other-modules:
       AoC2022.Day1Spec
       AoC2022.Day2Spec
+      AoC2023.Day11Spec
       AoC2023.Day1Spec
       AoC2023.Day5Spec
       Paths_aoc
