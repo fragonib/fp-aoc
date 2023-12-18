@@ -1,7 +1,7 @@
 {-# LANGUAGE RankNTypes #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
-module AoC2023.Day11Part1 (run, solve, expand) where
+module AoC2023.Day11Part1 (run, solve) where
 
 import Control.Arrow (Arrow (second))
 import Control.Lens (Lens', over, view, _1, _2)
@@ -13,32 +13,39 @@ type Space = [Galaxy]
 type Galaxy = (Int, Int)
 
 solve :: [String] -> Int
-solve lines = sum $ allDistances expandedSpace
+solve lines = sum $ galaxyDistances expandedSpace
   where
-    expandedSpace = expand _1 $ expand _2 galaxies
-    galaxies = parsing lines
+    expandedSpace = (expandSpaceCoord _1 . expandSpaceCoord _2) galaxies
+    galaxies = parseGalaxies lines
 
-allDistances :: Space -> [Int]
-allDistances [] = []
-allDistances (g : gs) = map (distance g) gs ++ allDistances gs
+galaxyDistances :: Space -> [Int]
+galaxyDistances [] = []
+galaxyDistances (firstGalaxy : restOfGalaxies) =
+  map (distance firstGalaxy) restOfGalaxies ++ galaxyDistances restOfGalaxies
 
 distance :: Galaxy -> Galaxy -> Int
-distance (r1, c1) (r2, c2) = abs (c2 - c1) + abs (r2 - r1)
+distance (row1, col1) (row2, col2) =
+  abs (col2 - col1) + abs (row2 - row1)
 
-expand :: Lens' Galaxy Int -> Space -> Space
-expand l s = go 0 [1 ..] (sortOn (view l) s)
+expandSpaceCoord :: Lens' Galaxy Int -> Space -> Space
+expandSpaceCoord galaxyCoordLens space =
+  go galaxyCoordLens 0 [1 ..] sortedGalaxiesByCoord
   where
-    go _ _ [] = []
-    go shift (coord : coords) gs@(g : _)
-      | coord /= view l g = go (shift + 1000000 - 1) coords gs
-      | otherwise =
-          let (inC, rest) = span ((== coord) . view l) gs
-           in map (over l (+ shift)) inC ++ go shift coords rest
+    sortedGalaxiesByCoord = sortOn (view galaxyCoordLens) space
+
+go :: Lens' Galaxy Int -> Int -> [Int] -> Space -> Space
+go _ _ _ [] = []
+go galaxyLens shift (coord : coords) galaxies@(firstGalaxy : _)
+  | coord /= view galaxyLens firstGalaxy =
+      go galaxyLens (shift + 1000000 - 1) coords galaxies
+  | otherwise =
+      let (inC, rest) = span ((== coord) . view galaxyLens) galaxies
+       in map (over galaxyLens (+ shift)) inC ++ go galaxyLens shift coords rest
 
 -- Parsing
 
-parsing :: [String] -> Space
-parsing lines = concatMap parseRow $ zip [1 ..] lines
+parseGalaxies :: [String] -> Space
+parseGalaxies lines = concatMap parseRow $ zip [1 ..] lines
 
 parseRow :: (Int, String) -> [Galaxy]
 parseRow (rowNumber, line) = map addRow galaxiesAndCols
