@@ -37,7 +37,7 @@ go :: Lens' Galaxy Int -> Int -> [Int] -> Space -> Space
 go _ _ _ [] = []
 go galaxyLens shift (coord : coords) galaxies@(firstGalaxy : _)
   | coord /= view galaxyLens firstGalaxy =
-      go galaxyLens (shift + 1000000 - 1) coords galaxies
+      go galaxyLens (shift + 100 - 1) coords galaxies
   | otherwise =
       let (inC, rest) = span ((== coord) . view galaxyLens) galaxies
        in map (over galaxyLens (+ shift)) inC ++ go galaxyLens shift coords rest

@@ -6,7 +6,7 @@ import Test.Hspec
 spec :: Spec
 spec = do
   describe "Day11" $ do
-    let input =
+    let inputLines =
           [ "...#......",
             ".......#..",
             "#.........",
@@ -19,4 +19,4 @@ spec = do
             "#...#....."
           ]
     it "Part1" $ do
-      Part1.solve input `shouldBe` 8410
+      Part1.solve inputLines `shouldBe` 8410
